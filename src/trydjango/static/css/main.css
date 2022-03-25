@@ -1,0 +1,24 @@
+.jumbotron {
+    background-color:#444 !important;
+    color: white !important;
+}
+
+.navbar {
+    margin-bottom:0px !important;
+}
+
+.clean-ul {
+    list-style-type:none;
+    padding:10px;
+    border: 1px solid black;
+}
+
+.clean-ul li:hover {
+    background-color: gold;
+    cursor:pointer;
+    width:100px;
+}
+
+.popup-div {
+    width:125px;
+}
