@@ -44,7 +44,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 def ajax_calc_stat(request):
-    if request.is_ajax and request.method == "POST":
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "POST":
 
         global PATH
         PATH = os.getcwd() + "/Stocks/"
