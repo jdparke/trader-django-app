@@ -73,7 +73,6 @@ def ajax_calc_stat(request):
 
 # Create your views here.
 def download_view(request, *args, **kwargs):
-    request.META["CSRF_COOKIE_USED"] = True
     current_dir = os.getcwd()
     tickers = get_column_from_csv("Wilshire-5000-Stocks.csv", "Ticker")
     tickers_json = tickers.to_json(orient="values")
@@ -84,8 +83,9 @@ def download_view(request, *args, **kwargs):
         "tickers": tickers,
         "tickers_json": tickers_json,
     }
-    #print("context: ", context)
-    return render(request, "download.html", context)
+    response = render(request, "download.html", context)
+    response.set_cookie(key='testCookie', value='Hello World')
+    return response
 
 
 def get_column_from_csv(file, col_name):
