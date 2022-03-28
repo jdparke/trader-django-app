@@ -73,6 +73,7 @@ def ajax_calc_stat(request):
 
 # Create your views here.
 def download_view(request, *args, **kwargs):
+    request.META["CSRF_COOKIE_USED"] = True
     current_dir = os.getcwd()
     tickers = get_column_from_csv("Wilshire-5000-Stocks.csv", "Ticker")
     tickers_json = tickers.to_json(orient="values")
