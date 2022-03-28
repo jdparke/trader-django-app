@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% csrf_token %}
 <div style="padding:10px;">
     <h1>Download your stocks</h1>
     <input type="text" id="tickerInput" onkeyup="searchMe(this);"/>
