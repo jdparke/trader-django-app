@@ -33,5 +33,6 @@ urlpatterns = [
     path('portfolio/', portfolio_view),
     path('sector/', sector_view),
     path('post/ajax/calc_stat', ajax_calc_stat, name="post_calc_stat"),
-    path('post/ajax/calc_plot', ajax_calc_plot, name="post_calc_plot")
+    path('post/ajax/calc_plot', ajax_calc_plot, name="post_calc_plot"),
+    path('github/', views.handle_github_hook)
 ]
