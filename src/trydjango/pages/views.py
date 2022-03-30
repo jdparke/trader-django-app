@@ -116,12 +116,14 @@ def handle_github_hook(request):
     # If request reached this point we are in a good shape
 
     # Process the GitHub events
-    # event = request.META.get('HTTP_X_GITHUB_EVENT', 'ping')
+    event = request.META.get('HTTP_X_GITHUB_EVENT', 'ping')
 
-    # if event == 'ping':
-    #     return HttpResponse('pong')
-    # elif event == 'push':
-    #     # Deploy some code for example
+    if event == 'ping':
+        return HttpResponse('pong')
+    elif event == 'push':
+        return HttpResponse('success')
+
+         # Deploy some code for example
     #     repo = Repo(settings.REPO_PATH)
     #     origin = repo.remotes.origin
     #     origin.pull('--rebase')
@@ -131,4 +133,4 @@ def handle_github_hook(request):
     #     return HttpResponse('success')
 
     #In case we receive an event that's not ping or push
-    return HttpResponse(status=204)
+    #return HttpResponse(status=204)
