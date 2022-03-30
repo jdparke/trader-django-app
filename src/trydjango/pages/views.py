@@ -121,16 +121,15 @@ def handle_github_hook(request):
     if event == 'ping':
         return HttpResponse('pong')
     elif event == 'push':
-        return HttpResponse('success: repo path: ' + settings.REPO_PATH)
 
          # Deploy some code for example
-    #     repo = Repo(settings.REPO_PATH)
-    #     origin = repo.remotes.origin
-    #     origin.pull('--rebase')
+        repo = Repo(settings.REPO_PATH)
+        origin = repo.remotes.origin
+        origin.pull('--rebase')
 
-    #     commit = request.json['after'][0:6]
-    #     print('Repository updated with commit {}'.format(commit))
-    #     return HttpResponse('success')
+        commit = "Auto Deploy" #request.json['after'][0:6]
+        print('Repository updated with commit {}'.format(commit))
+        return HttpResponse('success')
 
     #In case we receive an event that's not ping or push
-    #return HttpResponse(status=204)
+    return HttpResponse(status=204)
