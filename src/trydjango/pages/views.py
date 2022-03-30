@@ -121,7 +121,7 @@ def handle_github_hook(request):
     if event == 'ping':
         return HttpResponse('pong')
     elif event == 'push':
-        return HttpResponse('success')
+        return HttpResponse('success: repo path: ' + settings.REPO_PATH)
 
          # Deploy some code for example
     #     repo = Repo(settings.REPO_PATH)
