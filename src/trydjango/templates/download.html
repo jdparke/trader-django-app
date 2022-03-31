@@ -26,6 +26,7 @@
 
     var tickers_json = '{{tickers_json}}';
     var tickersArr = JSON.parse(tickers_json.replaceAll("&quot;","\""))
+    var tickersArrSmall = tickersArr.slice(1, 10);
 
     function selectMe(el) {
         $("#tickerInput").val(el);
@@ -84,10 +85,9 @@
                 console.log("Successful call, data", data);
                 $("#retrieving").html("Successfully retrieved stock '" + $("#tickerInput").val() + "'!");
                 index++;
-                //if (index >= 20) {
-                //    return;
-                //}
-                downloadStockRecursive(index);
+                if (index < tickersArr.length) {
+                    downloadStockRecursive(index);
+                }
             },
             error: function(errMsg) {
                 $("#retrieving").html("Found error: " + JSON.stringify(errMsg));
