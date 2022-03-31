@@ -49,6 +49,24 @@
 
     function downloadAllStocks() {
         console.log("All stocks: ", tickersArr);
+        var answer = confirm("Are you sure you want to download all Stocks, this will take about 20 mins.");
+
+        if (answer) {
+            $.ajax({
+                headers: { "X-CSRFToken": $.cookie("csrftoken") },
+                type: "POST",
+                url: " {% url 'post_calc_stat_all' %}",
+                data: {},
+                success: function(data) {
+                    console.log("Successful call, data", data);
+                    $("#retrieving").html("Successfully retrieved all stocks!");
+                },
+                error: function(errMsg) {
+                    $("#retrieving").html("Found error: " + JSON.stringify(errMsg));
+                }
+            });
+        }
+        
     }
 
     function downloadStock(e) {

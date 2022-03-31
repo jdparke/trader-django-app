@@ -18,7 +18,7 @@ from django.urls import path
 
 from pages import views
 from users.views import user_detail_view
-from calc_stat.views import download_view, ajax_calc_stat
+from calc_stat.views import download_view, ajax_calc_stat, ajax_calc_stat_all
 from calc_plot.views import ajax_calc_plot
 from portfolios.views import portfolio_view
 from sectors.views import sector_view
@@ -33,6 +33,9 @@ urlpatterns = [
     path('portfolio/', portfolio_view),
     path('sector/', sector_view),
     path('post/ajax/calc_stat', ajax_calc_stat, name="post_calc_stat"),
+    path('post/ajax/calc_stat_all', ajax_calc_stat_all, name="post_calc_stat_all"),
     path('post/ajax/calc_plot', ajax_calc_plot, name="post_calc_plot"),
     path('github/', views.handle_github_hook)
+
+    
 ]
