@@ -43,35 +43,6 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.shortcuts import render
 
-
-def ajax_calc_stat_all(request):
-    tickers = get_column_from_csv("Wilshire-5000-Stocks.csv", "Ticker")
-    global PATH
-    PATH = os.getcwd() + "/Stocks/"
-
-    initial = 0
-    for x in tickers:
-        #if (initial >= 5):
-        #    break
-        try:
-
-            save_to_csv_from_yahoo(PATH, x)
-
-            print("Working on :", x)
-            new_df = get_stock_df_from_csv(x)
-            new_df = add_daily_return_to_df(new_df)
-            new_df = add_cum_return_to_df(new_df)
-            new_df = add_bollinger_bands(new_df)
-            new_df = add_Ichimoku(new_df)
-            new_df.to_csv(PATH + x + '.csv')
-        except Exception as ex:
-            print(ex)
-
-        initial += 1
-
-    data = {'code': 'SUCCESS'}
-    return JsonResponse(data, status=200)
-
 def ajax_calc_stat(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "POST":
 
