@@ -51,8 +51,8 @@ def ajax_calc_stat_all(request):
 
     initial = 0
     for x in tickers:
-        if (initial >= 5):
-            break
+        #if (initial >= 5):
+        #    break
         try:
 
             save_to_csv_from_yahoo(PATH, x)
