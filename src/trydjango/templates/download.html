@@ -7,11 +7,15 @@
     <input type="text" id="tickerInput" onkeyup="searchMe(this);"/>
     <input type="button" value="Get Stock" onclick="downloadStock(event);" />
     <input type="button" value="Plot Stock" onclick="plotStock(event);" />
+    <input type="button" value="Download All Stocks" onclick="downloadAllStocks(event);" />
     <div id="retrieving" style="color:#10631e;padding-top:10px;">
     </div>
     <div class="popup-div">
         <ul id="mylist" class="clean-ul" style="display:none;">
         </ul>
+    </div>
+    <div id="allStocks">
+
     </div>
     <div style="width:1400px;height:1000px" id='chart' class='chart'></div>
 </div>
@@ -41,6 +45,10 @@
             $("#mylist").hide();
             $("#mylist").empty();
         }
+    }
+
+    function downloadAllStocks() {
+        console.log("All stocks: ", tickersArr);
     }
 
     function downloadStock(e) {
