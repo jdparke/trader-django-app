@@ -84,9 +84,9 @@
                 console.log("Successful call, data", data);
                 $("#retrieving").html("Successfully retrieved stock '" + $("#tickerInput").val() + "'!");
                 index++;
-                if (index >= 20) {
-                    return;
-                }
+                //if (index >= 20) {
+                //    return;
+                //}
                 downloadStockRecursive(index);
             },
             error: function(errMsg) {
