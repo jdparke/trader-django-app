@@ -3,6 +3,14 @@ body {
     color: #ddd !important;
 }
 
+input[type=button] {
+    color: white !important;
+}
+
+input[type=text] {
+    color: black !important;
+}
+
 .jumbotron {
     background-color:#444 !important;
     color: white !important;
