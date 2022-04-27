@@ -1,7 +1,300 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>
-    Sectors Page
-</h1>
+<div style="text-align:center;">
+	<h1>
+	    Sectors Page
+	</h1>
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Industrial
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in industrial %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Healthcare
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in healthcare %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			IT
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in it %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Communication
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in commun %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Staples
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in staple %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Discretionary
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in discretion %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Utilities
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in utility %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Finance
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in finance %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Materials
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in material %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Real Estate
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in restate %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div class="parent-stock-div">
+		<div class="stock-div">
+			Energy
+		</div>
+		<table>
+			<tr>
+				<th>
+					Ticker
+				</th>
+				<th>
+					Cum. Return
+				</th>
+			</tr>
+			{% for row in energy %}
+			<tr>
+				<td>
+					{{ row.Ticker }}
+				</td>
+				<td>
+					{{ row.CUM_RET|floatformat:2}}
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+</script>
 {% endblock %}
