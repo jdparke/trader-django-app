@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div style="text-align:center;">
+<div id="sector-container" style="text-align:center;">
 	<h1>
 	    Sectors Page
 	</h1>
@@ -134,167 +134,72 @@
 			{% endfor %}
 		</table>
 	</div>
-
-<!-- 	<div class="parent-stock-div">
-		<div class="stock-div">
-			Discretionary
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in discretion %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Utilities
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in utility %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Finance
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in finance %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Materials
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in material %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Real Estate
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in restate %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Energy
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in energy %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div> -->
 </div>
 
 {% endblock %}
 
 {% block footer %}
 <script>
+
+	function addTable(name, data) {
+		var parentStockDiv = document.createElement("div");
+		parentStockDiv.classList.add("parent-stock-div");
+
+		var stockDiv = document.createElement("div");
+		stockDiv.classList.add("stock-div");
+		stockDiv.innerHTML = name;
+
+		var newTable = document.createElement("table");
+		var row = newTable.insertRow(0);
+
+		var headerCell = document.createElement("th")
+		headerCell.innerHTML = "Ticker";
+		var headerCell2 = document.createElement("th")
+		headerCell2.innerHTML = "Cum. Return";
+		
+		row.appendChild(headerCell);
+		row.appendChild(headerCell2);
+
+		parentStockDiv.appendChild(stockDiv);
+		parentStockDiv.appendChild(newTable);
+		$("#sector-container").append(parentStockDiv);
+
+		data.forEach(x => {
+			var dataRow = newTable.insertRow(-1);
+			
+			var dataCell = document.createElement("td");
+			dataCell.innerHTML = x.Ticker;
+
+			var dataCell2 = document.createElement("td");
+			dataCell2.innerHTML = x.CUM_RET.toFixed(2);
+			
+			dataRow.appendChild(dataCell);
+			dataRow.appendChild(dataCell2);
+		});
+	}
+
+	downloadSectors2();
+
+	function downloadSectors2() {
+		console.log("Calling sectors2...");
+        $.ajax({
+            headers: { "X-CSRFToken": $.cookie("csrftoken") },
+            type: "POST",
+            url: " {% url 'post_sector' %}",
+            data: {},
+            success: function(data) {
+                addTable("Discretionary", data.discretion);
+                addTable("Utilities", data.utility);
+                addTable("Financials", data.finance);
+                addTable("Materials", data.material);
+                addTable("Real Estate", data.restate);
+                addTable("Energy", data.energy);
+            },
+            error: function(errMsg) {
+                $("#retrieving").html("Found error: " + JSON.stringify(errMsg));
+            }
+        });
+        return false;
+    }
 </script>
 {% endblock %}

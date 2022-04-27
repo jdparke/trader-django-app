@@ -21,7 +21,7 @@ from users.views import user_detail_view
 from calc_stat.views import download_view, ajax_calc_stat
 from calc_plot.views import ajax_calc_plot
 from portfolios.views import portfolio_view
-from sectors.views import sector_view
+from sectors.views import sector_view, ajax_sector
 
 urlpatterns = [
     path('', views.home_view),
@@ -32,6 +32,7 @@ urlpatterns = [
     path('download/', download_view),
     path('portfolio/', portfolio_view),
     path('sector/', sector_view),
+    path('post/ajax/sector', ajax_sector, name="post_sector"),
     path('post/ajax/calc_stat', ajax_calc_stat, name="post_calc_stat"),
     path('post/ajax/calc_plot', ajax_calc_plot, name="post_calc_plot"),
     path('github/', views.handle_github_hook)
