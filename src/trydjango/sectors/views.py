@@ -100,36 +100,36 @@ def sector_view(request, *args, **kwargs):
 	it_df = sec_df.loc[sec_df['Sector'] == "Information Technology"]
 	comm_df = sec_df.loc[sec_df['Sector'] == "Communication"]
 	staple_df = sec_df.loc[sec_df['Sector'] == "Staples"]
-	discretion_df = sec_df.loc[sec_df['Sector'] == "Discretionary"]
-	utility_df = sec_df.loc[sec_df['Sector'] == "Utilities"]
-	financial_df = sec_df.loc[sec_df['Sector'] == "Financials"]
-	material_df = sec_df.loc[sec_df['Sector'] == "Materials"]
-	restate_df = sec_df.loc[sec_df['Sector'] == "Real Estate"]
-	energy_df = sec_df.loc[sec_df['Sector'] == "Energy"]
+	# discretion_df = sec_df.loc[sec_df['Sector'] == "Discretionary"]
+	# utility_df = sec_df.loc[sec_df['Sector'] == "Utilities"]
+	# financial_df = sec_df.loc[sec_df['Sector'] == "Financials"]
+	# material_df = sec_df.loc[sec_df['Sector'] == "Materials"]
+	# restate_df = sec_df.loc[sec_df['Sector'] == "Real Estate"]
+	# energy_df = sec_df.loc[sec_df['Sector'] == "Energy"]
 
 	industrial = get_cum_ret_for_stocks(indus_df)
 	health_care = get_cum_ret_for_stocks(health_df)
 	it = get_cum_ret_for_stocks(it_df)
 	commun = get_cum_ret_for_stocks(comm_df)
 	staple = get_cum_ret_for_stocks(staple_df)
-	discretion = get_cum_ret_for_stocks(discretion_df)
-	utility = get_cum_ret_for_stocks(utility_df)
-	finance = get_cum_ret_for_stocks(financial_df)
-	material = get_cum_ret_for_stocks(material_df)
-	restate = get_cum_ret_for_stocks(restate_df)
-	energy = get_cum_ret_for_stocks(energy_df)
+	# discretion = get_cum_ret_for_stocks(discretion_df)
+	# utility = get_cum_ret_for_stocks(utility_df)
+	# finance = get_cum_ret_for_stocks(financial_df)
+	# material = get_cum_ret_for_stocks(material_df)
+	# restate = get_cum_ret_for_stocks(restate_df)
+	# energy = get_cum_ret_for_stocks(energy_df)
 
 	industrialSorted = industrial.sort_values(by=['CUM_RET'], ascending=False).head(20)
 	healthCareSorted = health_care.sort_values(by=['CUM_RET'], ascending=False).head(20)
 	itSorted = it.sort_values(by=['CUM_RET'], ascending=False).head(20)
 	communSorted = commun.sort_values(by=['CUM_RET'], ascending=False).head(20)
 	stapleSorted = staple.sort_values(by=['CUM_RET'], ascending=False).head(20)
-	discretionSorted = discretion.sort_values(by=['CUM_RET'], ascending=False).head(20)
-	utilitySorted = utility.sort_values(by=['CUM_RET'], ascending=False).head(20)
-	financeSorted = finance.sort_values(by=['CUM_RET'], ascending=False).head(20)
-	materialSorted = material.sort_values(by=['CUM_RET'], ascending=False).head(20)
-	restateSorted = restate.sort_values(by=['CUM_RET'], ascending=False).head(20)
-	energySorted = energy.sort_values(by=['CUM_RET'], ascending=False).head(20)
+	# discretionSorted = discretion.sort_values(by=['CUM_RET'], ascending=False).head(20)
+	# utilitySorted = utility.sort_values(by=['CUM_RET'], ascending=False).head(20)
+	# financeSorted = finance.sort_values(by=['CUM_RET'], ascending=False).head(20)
+	# materialSorted = material.sort_values(by=['CUM_RET'], ascending=False).head(20)
+	# restateSorted = restate.sort_values(by=['CUM_RET'], ascending=False).head(20)
+	# energySorted = energy.sort_values(by=['CUM_RET'], ascending=False).head(20)
 
 	context = {
 		'menu_list': obj,
@@ -138,12 +138,12 @@ def sector_view(request, *args, **kwargs):
 		'it': json.loads(itSorted.to_json(orient='records')),
 		'commun': json.loads(communSorted.to_json(orient='records')),
 		'staple': json.loads(stapleSorted.to_json(orient='records')),
-		'discretion': json.loads(discretionSorted.to_json(orient='records')),
-		'utility': json.loads(utilitySorted.to_json(orient='records')),
-		'finance': json.loads(financeSorted.to_json(orient='records')),
-		'material': json.loads(materialSorted.to_json(orient='records')),
-		'restate': json.loads(restateSorted.to_json(orient='records')),
-		'energy': json.loads(energySorted.to_json(orient='records'))
+		# 'discretion': json.loads(discretionSorted.to_json(orient='records')),
+		# 'utility': json.loads(utilitySorted.to_json(orient='records')),
+		# 'finance': json.loads(financeSorted.to_json(orient='records')),
+		# 'material': json.loads(materialSorted.to_json(orient='records')),
+		# 'restate': json.loads(restateSorted.to_json(orient='records')),
+		# 'energy': json.loads(energySorted.to_json(orient='records'))
 	}	
 
 	return render(request, "sector.html", context)
