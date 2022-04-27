@@ -134,6 +134,11 @@
 			{% endfor %}
 		</table>
 	</div>
+
+	<div id="wait-div" style="display:inline-block;">
+		<div id="loading"></div>
+		<div style="color:#777733;display:inline-block;">Loading...</div>
+	</div>
 </div>
 
 {% endblock %}
@@ -182,6 +187,7 @@
 
 	function downloadSectors2() {
 		console.log("Calling sectors2...");
+		$("#wait-div").show();
         $.ajax({
             headers: { "X-CSRFToken": $.cookie("csrftoken") },
             type: "POST",
@@ -194,6 +200,7 @@
                 addTable("Materials", data.material);
                 addTable("Real Estate", data.restate);
                 addTable("Energy", data.energy);
+				$("#wait-div").hide();
             },
             error: function(errMsg) {
                 $("#retrieving").html("Found error: " + JSON.stringify(errMsg));
