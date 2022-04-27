@@ -73,7 +73,7 @@
     }
 
     function downloadStockRecursive(index) {
-        var myticker = tickersArr[index];
+        var myticker = tickersArrSmall[index];
         $("#tickerInput").val(myticker);
 
         $.ajax({
@@ -85,7 +85,7 @@
                 console.log("Successful call, data", data);
                 $("#retrieving").html("Successfully retrieved stock '" + $("#tickerInput").val() + "'!");
                 index++;
-                if (index < tickersArr.length) {
+                if (index < tickersArrSmall.length) {
                     downloadStockRecursive(index);
                 }
             },
