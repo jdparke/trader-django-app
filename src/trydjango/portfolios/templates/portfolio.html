@@ -1,7 +1,174 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>
-    Portfolio Page
-</h1>
+<div style="display:inline-block;vertical-align:top;width:15%;text-align:center;">
+    <h2>My Stock Picks</h2>
+    <table id="tbl-stock-pics" style="margin-left:auto;margin-right:auto;">
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<hr>
+<div style="text-align:center;display:inline-block;">
+    <h2>Stock Performance</h2>
+    <div style="width:650px;height:500px;margin-left:auto;margin-right:auto;" id='chart' class='chart'></div>
+</div>
+
+<div style="text-align:center;display:inline-block;margin-left:10px;">
+    <h2>Culmulative Returns</h2>
+    <div style="width:650px;height:500px;margin-left:auto;margin-right:auto;" id='chart-cum-ret' class='chart'></div>
+</div>
+
+<div style="text-align:center;width:650px;display:inline-block;margin-left:10px;vertical-align:top;">
+    <h2>Correlations</h2>
+    <table id="tbl-correlation" style="margin-left:auto; margin-right:auto;">
+    </table>
+</div>
+
+<div style="text-align:center;width:650px;display:inline-block;">
+    <h2>Optimal Stock Weights</h2>
+    <div style="display:inline-block;vertical-align:middle;margin-right:50px;">
+        <table id="tbl-stock-weights" style="margin-left:auto; margin-right:auto;">
+        </table>
+    </div>
+    <div style="display:inline-block;">
+        <div style="margin-top:10px;">
+            <b>Volatility:</b><span style="margin-left:10px;" id="my-volatility"></span>
+        </div>
+        <div>
+            <b>Return:</b><span style="margin-left:10px;" id="my-return"></span>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+    var myStockPicks = JSON.parse(localStorage.getItem("myStockPicks"));
+
+    recreatePickerTable();
+    mergePortfolioList();
+
+    function recreatePickerTable() {
+		$("#tbl-stock-pics tbody").empty();
+		myStockPicks.forEach(x => {
+			$("#tbl-stock-pics tbody").append("<tr><td>" + x + "</td><td style='cursor:pointer;' onclick='removeMe(this);'>X</td></tr>");
+		});
+        localStorage.setItem('myStockPicks', JSON.stringify(myStockPicks));
+		console.log("localStorage", localStorage.getItem('myStockPicks'));
+	}
+
+    function removeMe(el) {
+		myStockPicks.splice(el.parentElement.rowIndex-1,1);
+		recreatePickerTable();
+	}
+
+    function mergePortfolioList() {
+        //$("#retrieving").html("Retrieving stock for '" + $("#tickerInput").val() + "'...");
+        $.ajax({
+            headers: { "X-CSRFToken": $.cookie("csrftoken") },
+            type: "POST",
+            url: " {% url 'post_portfolio' %}",
+            data: {"port_list": JSON.stringify(myStockPicks)},
+            success: function(data) {
+                console.log("Successful call, data", data);
+                let plotlyChart = JSON.parse(data.graph_json).data;
+                Plotly.newPlot('chart',plotlyChart,{});
+
+                let plotlyCumRetChart = JSON.parse(data.graph_cum_ret_json).data;
+                Plotly.newPlot('chart-cum-ret', plotlyCumRetChart,{});
+
+                buildCorrelationTable(data.correlation);
+                buildStockWeightsTable(data.bestSharpeRatio, data.volatility, data.return);
+
+                //$("#retrieving").html("Successfully retrieved stock '" + $("#tickerInput").val() + "'!");
+            },
+            error: function(errMsg) {
+                //$("#retrieving").html("Found error: " + JSON.stringify(errMsg));
+            }
+        });
+        return false;
+    }
+
+    function buildStockWeightsTable(table_data, volatility, returns) {
+        let mytable = document.getElementById("tbl-stock-weights");
+
+        // Header Row
+        let headerRow = mytable.insertRow(-1);
+        let dataCell = document.createElement("th");
+        dataCell.innerHTML = "Ticker";
+        headerRow.appendChild(dataCell);
+        let dataCell2 = document.createElement("th");
+        dataCell2.innerHTML = "Weight";
+        headerRow.appendChild(dataCell2);
+
+        for (col in table_data) {
+            let dataRow = mytable.insertRow(-1);
+            let dataCell = document.createElement("td");
+            dataCell.innerHTML = col;
+            dataRow.appendChild(dataCell);
+            let dataCell2 = document.createElement("td");
+            dataCell2.innerHTML = table_data[col].toFixed(2);
+            dataRow.appendChild(dataCell2);
+        }
+        $("#my-volatility").html(volatility.toFixed(2));
+        $("#my-return").html(returns.toFixed(2));
+    }
+
+    function buildCorrelationTable(table_data) {
+        console.log("table_data", table_data);
+
+        let count = 0;
+        let mytable = document.getElementById("tbl-correlation");
+
+        table_data.forEach(row => {
+            // Build Header Row
+            if (count == 0) {
+                let dataRow = mytable.insertRow(-1);
+                
+                // Blank Column
+                let dataCell = document.createElement("th");
+                dataCell.innerHTML = "";
+                dataRow.appendChild(dataCell);
+
+                for (col in row) {
+                    let dataCell = document.createElement("th");
+                    dataCell.innerHTML = col;
+                    dataRow.appendChild(dataCell);
+                }
+            }
+
+            // Build Data Rows
+            var dataRow2 = mytable.insertRow(-1);
+            // First column should be the appropriate ticker name
+            let dataCell = document.createElement("td");
+            dataCell.innerHTML = findPropWithVal1(row);
+            dataRow2.appendChild(dataCell);
+            for (col in row) {
+                // Add all the data
+                let dataCell = document.createElement("td");
+                dataCell.innerHTML = row[col].toFixed(2);
+                dataRow2.appendChild(dataCell);
+            }
+            count++;
+        });
+    }
+
+    function findPropWithVal1(row) {
+        for (col in row) {
+            if (row[col] == 1) {
+                return col;
+            }
+        }
+    }
+
+</script>
 {% endblock %}

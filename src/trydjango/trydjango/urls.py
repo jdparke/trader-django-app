@@ -20,7 +20,7 @@ from pages import views
 from users.views import user_detail_view
 from calc_stat.views import download_view, ajax_calc_stat
 from calc_plot.views import ajax_calc_plot
-from portfolios.views import portfolio_view
+from portfolios.views import portfolio_view, ajax_portfolio
 from sectors.views import sector_view, ajax_sector
 
 urlpatterns = [
@@ -33,6 +33,7 @@ urlpatterns = [
     path('portfolio/', portfolio_view),
     path('sector/', sector_view),
     path('post/ajax/sector', ajax_sector, name="post_sector"),
+    path('post/ajax/portfolio', ajax_portfolio, name="post_portfolio"),
     path('post/ajax/calc_stat', ajax_calc_stat, name="post_calc_stat"),
     path('post/ajax/calc_plot', ajax_calc_plot, name="post_calc_plot"),
     path('github/', views.handle_github_hook)
