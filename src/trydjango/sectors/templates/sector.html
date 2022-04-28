@@ -1,150 +1,63 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id="sector-container" style="text-align:center;">
+<div id="wait-div" style="text-align:center;margin-top:10px;">
+	<div id="loading"></div>
+	<div style="color:#777733;display:inline-block;">Loading...</div>
+</div>
+
+<div style="display:inline-block;vertical-align:top;width:15%;text-align:center;">
+	<h2>My Stock Picks</h2>
+	<table id="tbl-stock-pics" style="margin-left:auto;margin-right:auto;">
+		<thead>
+			<tr>
+				<th>Ticker</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
+<div id="sector-container" style="text-align:center;display:inline-block;width:80%;">
 	<h1>
 	    Sectors Page
 	</h1>
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Industrial
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in industrial %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Healthcare
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in healthcare %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			IT
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in it %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Communication
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in commun %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="parent-stock-div">
-		<div class="stock-div">
-			Staples
-		</div>
-		<table>
-			<tr>
-				<th>
-					Ticker
-				</th>
-				<th>
-					Cum. Return
-				</th>
-			</tr>
-			{% for row in staple %}
-			<tr>
-				<td>
-					{{ row.Ticker }}
-				</td>
-				<td>
-					{{ row.CUM_RET|floatformat:2}}
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div id="wait-div" style="display:inline-block;">
-		<div id="loading"></div>
-		<div style="color:#777733;display:inline-block;">Loading...</div>
-	</div>
 </div>
 
 {% endblock %}
 
 {% block footer %}
 <script>
+	
+	var myStockPicks = [];
+
+	fillSectors1();
+	downloadSectors2();
+
+	function fillSectors1() {
+		var industrial = '{{industrial}}';
+		var industrialArr = JSON.parse(industrial.replaceAll("&#x27;","\""));
+
+		var healthcare = '{{healthcare}}';
+		var healthcareArr = JSON.parse(healthcare.replaceAll("&#x27;","\""));
+
+		var it = '{{it}}';
+		var itArr = JSON.parse(it.replaceAll("&#x27;","\""));
+
+		var commun = '{{commun}}';
+		var communArr = JSON.parse(commun.replaceAll("&#x27;","\""));
+
+		var staple = '{{staple}}';
+		var stapleArr = JSON.parse(staple.replaceAll("&#x27;","\""));
+
+		addTable("Industrial", industrialArr);
+		addTable("Healthcare", healthcareArr);
+		addTable("IT", itArr);
+		addTable("Communication", communArr);
+		addTable("Staples", stapleArr);
+	}
 
 	function addTable(name, data) {
 		var parentStockDiv = document.createElement("div");
@@ -155,6 +68,7 @@
 		stockDiv.innerHTML = name;
 
 		var newTable = document.createElement("table");
+		newTable.className = "tbl-sector";
 		var row = newTable.insertRow(0);
 
 		var headerCell = document.createElement("th")
@@ -174,8 +88,13 @@
 			
 			var dataCell = document.createElement("td");
 			dataCell.innerHTML = x.Ticker;
+			dataCell.style.cursor = "pointer";
+			dataRow.onclick = function() {
+				populateTicker(this);
+			}
 
 			var dataCell2 = document.createElement("td");
+			dataCell2.style.cursor = "pointer";
 			dataCell2.innerHTML = x.CUM_RET.toFixed(2);
 			
 			dataRow.appendChild(dataCell);
@@ -183,7 +102,27 @@
 		});
 	}
 
-	downloadSectors2();
+	function populateTicker(el) {
+		let cellValue = el.cells[0].innerHTML;
+		if (myStockPicks.indexOf(cellValue) == -1) {
+			myStockPicks.push(cellValue);
+			recreatePickerTable();
+		}
+	}
+
+	function recreatePickerTable() {
+		$("#tbl-stock-pics tbody").empty();
+		myStockPicks.forEach(x => {
+			$("#tbl-stock-pics tbody").append("<tr><td>" + x + "</td><td style='cursor:pointer;' onclick='removeMe(this);'>X</td></tr>");
+		});
+		localStorage.setItem('myStockPicks', JSON.stringify(myStockPicks));
+		console.log("localStorage", localStorage.getItem('myStockPicks'));
+	}
+
+	function removeMe(el) {
+		myStockPicks.splice(el.parentElement.rowIndex-1,1);
+		recreatePickerTable();
+	}
 
 	function downloadSectors2() {
 		console.log("Calling sectors2...");

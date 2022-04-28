@@ -53,6 +53,10 @@ table {
     margin-top: 10px;
 }
 
+table.tbl-sector tr:hover {
+    background-color: #bbb;
+}
+
 .stock-div {
     font-weight:bold;
     text-align: center;
