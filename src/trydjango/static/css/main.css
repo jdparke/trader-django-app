@@ -7,7 +7,7 @@ input[type=button] {
     color: white !important;
 }
 
-input[type=text] {
+input[type=text], input[type=number] {
     color: black !important;
 }
 

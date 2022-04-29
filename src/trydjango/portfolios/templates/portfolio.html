@@ -38,8 +38,12 @@
         <table id="tbl-stock-weights" style="margin-left:auto; margin-right:auto;">
         </table>
     </div>
-    <div style="display:inline-block;">
-        <div style="margin-top:10px;">
+    <div style="display:inline-block;vertical-align:middle;">
+        <div><b>Amount to Invest</b></div>
+        <div>
+            <input type="number" id='txt-amount-to-invest' value="10000" onblur="buildStockWeightsTable(mydata.bestSharpeRatio, mydata.volatility, mydata.return);">
+        </div>
+        <div style="margin-top:50px;">
             <b>Volatility:</b><span style="margin-left:10px;" id="my-volatility"></span>
         </div>
         <div>
@@ -56,7 +60,7 @@
     var myStockPicks = JSON.parse(localStorage.getItem("myStockPicks")) ?? [];
     var tickers_json = '{{tickers_json}}';
     var tickersWithNames = JSON.parse(tickers_json.replaceAll("&quot;","\""))
-
+    var mydata;
     recreatePickerTable();
     mergePortfolioList();
 
@@ -84,6 +88,7 @@
             data: {"port_list": JSON.stringify(myStockPicks)},
             success: function(data) {
                 console.log("Successful call, data", data);
+                mydata = data;
                 let plotlyChart = JSON.parse(data.graph_json).data;
                 Plotly.newPlot('chart',plotlyChart,{});
 
@@ -103,6 +108,7 @@
     }
 
     function buildStockWeightsTable(table_data, volatility, returns) {
+        $("#tbl-stock-weights").empty();
         let mytable = document.getElementById("tbl-stock-weights");
 
         // Header Row
@@ -113,6 +119,9 @@
         let dataCell2 = document.createElement("th");
         dataCell2.innerHTML = "Weight";
         headerRow.appendChild(dataCell2);
+        let dataCell3 = document.createElement("th");
+        dataCell3.innerHTML = "Amount to Invest";
+        headerRow.appendChild(dataCell3);
 
         for (col in table_data) {
             let dataRow = mytable.insertRow(-1);
@@ -121,7 +130,12 @@
             dataRow.appendChild(dataCell);
             let dataCell2 = document.createElement("td");
             dataCell2.innerHTML = table_data[col].toFixed(2);
+            dataCell2.style.textAlign = "right";
             dataRow.appendChild(dataCell2);
+            let dataCell3 = document.createElement("td");
+            dataCell3.innerHTML = '$' + ((table_data[col] / 100) * $("#txt-amount-to-invest").val()).toLocaleString('en-US', {maximumFractionDigits: 2});
+            dataCell3.style.textAlign = "right";
+            dataRow.appendChild(dataCell3);
         }
         $("#my-volatility").html(volatility.toFixed(2));
         $("#my-return").html(returns.toFixed(2));
