@@ -91,6 +91,10 @@ def ajax_sector(request):
 		return JsonResponse({"error": ""}, status=400)
 
 def sector_view(request, *args, **kwargs):
+
+	tickers = get_stock_df_from_csv_no_path("Wilshire-5000-Stocks.csv")
+	tickers_json = tickers.to_json(orient="records")
+
 	obj = Menu.objects.all().order_by('iOrder')
 	global PATH
 	PATH = os.getcwd() 
@@ -117,6 +121,7 @@ def sector_view(request, *args, **kwargs):
 
 	context = {
 		'menu_list': obj,
+		'tickers_json': tickers_json,
 		'industrial': json.loads(industrialSorted.to_json(orient='records')),
 		'healthcare': json.loads(healthCareSorted.to_json(orient='records')),
 		'it': json.loads(itSorted.to_json(orient='records')),
@@ -125,6 +130,14 @@ def sector_view(request, *args, **kwargs):
 	}	
 
 	return render(request, "sector.html", context)
+
+def get_stock_df_from_csv_no_path(file):
+    try:
+        df = pd.read_csv(file)
+    except FileNotFoundError:
+        print("File Doesn't Exist")
+    else:
+        return df
 
 def get_column_from_csv(file, col_name):
     # Try to get the file and if it doesn't exist issue a warning
@@ -148,23 +161,23 @@ def get_stock_df_from_csv(ticker):
         return df
 
 def get_cum_ret_for_stocks(stock_df):
-    tickers = []
-    cum_rets = []
+	tickers = []
+	cum_rets = []
+	ichi_arr = []
 
-    for index, row in stock_df.iterrows():
-        df = get_stock_df_from_csv(row['Ticker'])
-        if df is None:
-            pass
-        else:
-            tickers.append(row['Ticker'])
-            try:
-                cum = df['cum_return'].iloc[-1]
-                #print("Ticker: " + row['Ticker'] + " | Cumulative Return: " + str(cum))
-                cum_rets.append(cum)
-            except:
-                #print("An exception occured")
-                cum_rets.append(0)
-    #print("Tickers", len(tickers))
-    #print("cum_returns", len(cum_rets))
-    return pd.DataFrame({'Ticker':tickers, 'CUM_RET':cum_rets})
-
+	for index, row in stock_df.iterrows():
+		df = get_stock_df_from_csv(row['Ticker'])
+		if df is None:
+			pass
+		else:
+			tickers.append(row['Ticker'])
+			try:
+				cum = df['cum_return'].iloc[-1]
+				ichi = df['SpanA'].iloc[-1] - df['SpanB'].iloc[-1]
+				cum_rets.append(cum)
+				ichi_arr.append(ichi)
+			except:
+				#print("An exception occured")
+				cum_rets.append(0)
+				ichi_arr.append(0)
+	return pd.DataFrame({'Ticker':tickers, 'CUM_RET':cum_rets, 'ICHI': ichi_arr})

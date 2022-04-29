@@ -2,8 +2,24 @@
 
 {% block content %}
 {% csrf_token %}
-<div style="padding:10px;">
-    <h1>Download your stocks</h1>
+<div style="display:inline-block;vertical-align:top;width:25%;text-align:center;padding:10px;">
+	<h2>My Stock Picks</h2>
+	<table id="tbl-stock-pics" style="margin-left:auto;margin-right:auto;">
+		<thead>
+			<tr>
+				<th>Ticker</th>
+				<th>Name</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
+
+<div style="display:inline-block;padding:10px;width:50%;">    
+    <h2>Download your stocks</h2>
     <input type="text" id="tickerInput" onkeyup="searchMe(this);"/>
     <input type="button" class="btn btn-primary" id="downloadStockBtn" value="Get Stock" onclick="downloadStock(event);" />
     <input type="button" class="btn btn-primary" value="Plot Stock" onclick="plotStock(event);" />
@@ -14,19 +30,36 @@
         <ul id="mylist" class="clean-ul" style="display:none;">
         </ul>
     </div>
-    <div id="allStocks">
-
-    </div>
-    <div style="width:1400px;height:1000px" id='chart' class='chart'></div>
 </div>
+<div style="width:1300px;height:700px;margin-left:auto;margin-right:auto;" id='chart' class='chart'></div>
 {% endblock %}
 
 {% block footer %}
 <script>
 
+    var myStockPicks = JSON.parse(localStorage.getItem("myStockPicks")) ?? [];
     var tickers_json = '{{tickers_json}}';
-    var tickersArr = JSON.parse(tickers_json.replaceAll("&quot;","\""))
+    var tickersWithNames = JSON.parse(tickers_json.replaceAll("&quot;","\""))
+    console.log("tickersArr", tickersWithNames);
+    var tickersArr = tickersWithNames.map(x => x.Ticker);
+
     var tickersArrSmall = tickersArr.slice(1182);
+	recreatePickerTable();
+
+    function removeMe(el) {
+		myStockPicks.splice(el.parentElement.rowIndex-1,1);
+		recreatePickerTable();
+	}
+
+    function recreatePickerTable() {
+		$("#tbl-stock-pics tbody").empty();
+		myStockPicks.forEach(x => {
+            let company = tickersWithNames.find(t => t.Ticker == x).Company;
+			$("#tbl-stock-pics tbody").append("<tr><td class='hover-color' onclick='selectMe(this.innerHTML);'>" + x + "</td><td>" + company + " </td><td  style='cursor:pointer;' onclick='removeMe(this);'>X</td></tr>");
+		});
+		localStorage.setItem('myStockPicks', JSON.stringify(myStockPicks));
+		console.log("localStorage", localStorage.getItem('myStockPicks'));
+	}
 
     function selectMe(el) {
         $("#tickerInput").val(el);

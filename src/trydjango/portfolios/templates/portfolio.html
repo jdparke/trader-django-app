@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div style="display:inline-block;vertical-align:top;width:15%;text-align:center;">
+<div style="display:inline-block;vertical-align:top;width:100%;text-align:center;">
     <h2>My Stock Picks</h2>
     <table id="tbl-stock-pics" style="margin-left:auto;margin-right:auto;">
         <thead>
-            <tr>
-                <th>Ticker</th>
-                <th></th>
-            </tr>
-        </thead>
+			<tr>
+				<th>Ticker</th>
+				<th>Name</th>
+				<th></th>
+			</tr>
+		</thead>
         <tbody>
         </tbody>
     </table>
@@ -53,6 +54,8 @@
 {% block footer %}
 <script>
     var myStockPicks = JSON.parse(localStorage.getItem("myStockPicks")) ?? [];
+    var tickers_json = '{{tickers_json}}';
+    var tickersWithNames = JSON.parse(tickers_json.replaceAll("&quot;","\""))
 
     recreatePickerTable();
     mergePortfolioList();
@@ -60,9 +63,10 @@
     function recreatePickerTable() {
 		$("#tbl-stock-pics tbody").empty();
 		myStockPicks.forEach(x => {
-			$("#tbl-stock-pics tbody").append("<tr><td>" + x + "</td><td style='cursor:pointer;' onclick='removeMe(this);'>X</td></tr>");
+            let company = tickersWithNames.find(t => t.Ticker == x).Company;
+			$("#tbl-stock-pics tbody").append("<tr><td>" + x + "</td><td>" + company + " </td><td  style='cursor:pointer;' onclick='removeMe(this);'>X</td></tr>");
 		});
-        localStorage.setItem('myStockPicks', JSON.stringify(myStockPicks));
+		localStorage.setItem('myStockPicks', JSON.stringify(myStockPicks));
 		console.log("localStorage", localStorage.getItem('myStockPicks'));
 	}
 

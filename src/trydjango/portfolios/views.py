@@ -129,13 +129,23 @@ def ajax_portfolio(request):
 
 def portfolio_view(request, *args, **kwargs):
     obj = Menu.objects.all().order_by('iOrder')
+    tickers = get_stock_df_from_csv_no_path("Wilshire-5000-Stocks.csv")
+    tickers_json = tickers.to_json(orient="records")
 
     context = {
         'menu_list': obj,
+        'tickers_json': tickers_json
     }
 
     return render(request, "portfolio.html", context)
 
+def get_stock_df_from_csv_no_path(file):
+    try:
+        df = pd.read_csv(file)
+    except FileNotFoundError:
+        print("File Doesn't Exist")
+    else:
+        return df
 
 def get_stock_df_from_csv(ticker):
     

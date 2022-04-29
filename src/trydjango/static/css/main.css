@@ -31,7 +31,7 @@ input[type=text] {
 }
 
 .clean-ul li:hover {
-    background-color: #777733;
+    background-color: #555;
     cursor:pointer;
     width:100px;
 }
@@ -54,7 +54,19 @@ table {
 }
 
 table.tbl-sector tr:hover {
-    background-color: #bbb;
+    background-color: #555;
+}
+
+.hover-color:hover {
+    background-color: #555;
+}
+
+.hover-color {
+    cursor:pointer;
+}
+
+#tbl-stock-pics td {
+    text-align: left;
 }
 
 .stock-div {

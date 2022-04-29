@@ -74,8 +74,8 @@ def ajax_calc_stat(request):
 # Create your views here.
 def download_view(request, *args, **kwargs):
     current_dir = os.getcwd()
-    tickers = get_column_from_csv("Wilshire-5000-Stocks.csv", "Ticker")
-    tickers_json = tickers.to_json(orient="values")
+    tickers = get_stock_df_from_csv_no_path("Wilshire-5000-Stocks.csv")
+    tickers_json = tickers.to_json(orient="records")
     obj = Menu.objects.all().order_by('iOrder')
 
     context = {
@@ -97,7 +97,13 @@ def get_column_from_csv(file, col_name):
     else:
         return df[col_name]
 
-
+def get_stock_df_from_csv_no_path(file):
+    try:
+        df = pd.read_csv(file)
+    except FileNotFoundError:
+        print("File Doesn't Exist")
+    else:
+        return df
 
 def save_to_csv_from_yahoo(folder, ticker):
     stock = yf.Ticker(ticker)

@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id="wait-div" style="text-align:center;margin-top:10px;">
-	<div id="loading"></div>
-	<div style="color:#777733;display:inline-block;">Loading...</div>
-</div>
 
-<div style="display:inline-block;vertical-align:top;width:15%;text-align:center;">
+
+<div style="display:inline-block;vertical-align:top;width:20%;text-align:center;">
 	<h2>My Stock Picks</h2>
 	<table id="tbl-stock-pics" style="margin-left:auto;margin-right:auto;">
 		<thead>
 			<tr>
 				<th>Ticker</th>
+				<th>Name</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -20,10 +18,14 @@
 		</tbody>
 	</table>
 </div>
-<div id="sector-container" style="text-align:center;display:inline-block;width:80%;">
+<div id="sector-container" style="text-align:center;display:inline-block;width:77%;">
 	<h1>
 	    Sectors Page
 	</h1>
+	<div id="wait-div" style="text-align:center;margin-top:10px;">
+		<div id="loading"></div>
+		<div style="color:#777733;display:inline-block;">Loading...</div>
+	</div>
 </div>
 
 {% endblock %}
@@ -31,6 +33,8 @@
 {% block footer %}
 <script>
 	var myStockPicks = JSON.parse(localStorage.getItem("myStockPicks")) ?? [];
+	var tickers_json = '{{tickers_json}}';
+    var tickersWithNames = JSON.parse(tickers_json.replaceAll("&quot;","\""))
 	recreatePickerTable();
 
 	fillSectors1();
@@ -39,6 +43,7 @@
 	function fillSectors1() {
 		var industrial = '{{industrial}}';
 		var industrialArr = JSON.parse(industrial.replaceAll("&#x27;","\""));
+		console.log("industrial", industrialArr);
 
 		var healthcare = '{{healthcare}}';
 		var healthcareArr = JSON.parse(healthcare.replaceAll("&#x27;","\""));
@@ -75,9 +80,12 @@
 		headerCell.innerHTML = "Ticker";
 		var headerCell2 = document.createElement("th")
 		headerCell2.innerHTML = "Cum. Return";
+		var headerCell3 = document.createElement("th")
+		headerCell3.innerHTML = "Ichi";
 		
 		row.appendChild(headerCell);
 		row.appendChild(headerCell2);
+		row.appendChild(headerCell3);
 
 		parentStockDiv.appendChild(stockDiv);
 		parentStockDiv.appendChild(newTable);
@@ -96,9 +104,15 @@
 			var dataCell2 = document.createElement("td");
 			dataCell2.style.cursor = "pointer";
 			dataCell2.innerHTML = x.CUM_RET.toFixed(2);
+
+			var dataCell3 = document.createElement("td");
+			dataCell3.style.cursor = "pointer";
+			dataCell3.innerHTML = x.ICHI.toFixed(2);
+			dataCell3.style.color = x.ICHI > 0 ? '#43b54c': '#d45350'
 			
 			dataRow.appendChild(dataCell);
 			dataRow.appendChild(dataCell2);
+			dataRow.appendChild(dataCell3);
 		});
 	}
 
@@ -113,7 +127,8 @@
 	function recreatePickerTable() {
 		$("#tbl-stock-pics tbody").empty();
 		myStockPicks.forEach(x => {
-			$("#tbl-stock-pics tbody").append("<tr><td>" + x + "</td><td style='cursor:pointer;' onclick='removeMe(this);'>X</td></tr>");
+            let company = tickersWithNames.find(t => t.Ticker == x).Company;
+			$("#tbl-stock-pics tbody").append("<tr><td>" + x + "</td><td>" + company + " </td><td  style='cursor:pointer;' onclick='removeMe(this);'>X</td></tr>");
 		});
 		localStorage.setItem('myStockPicks', JSON.stringify(myStockPicks));
 		console.log("localStorage", localStorage.getItem('myStockPicks'));
