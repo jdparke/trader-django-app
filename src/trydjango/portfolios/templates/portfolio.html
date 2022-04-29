@@ -52,7 +52,7 @@
 
 {% block footer %}
 <script>
-    var myStockPicks = JSON.parse(localStorage.getItem("myStockPicks"));
+    var myStockPicks = JSON.parse(localStorage.getItem("myStockPicks")) ?? [];
 
     recreatePickerTable();
     mergePortfolioList();
